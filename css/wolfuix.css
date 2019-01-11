@@ -1,0 +1,22 @@
+/**
+ * Wolfuix
+ * Copyright (C) Simon Raichl 2018
+ * MIT License
+ */
+
+/* LIST box basic style */
+
+.wolfuix-list-box {
+    border: 1px solid #1a1a1a;
+    width: fit-content;
+}
+
+.wolfuix-list-box__item {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.wolfuix-list-box__item.active {
+    color: #fff;
+    background: #3a62cb;
+}
