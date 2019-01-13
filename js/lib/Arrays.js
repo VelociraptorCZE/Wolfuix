@@ -14,13 +14,8 @@ if (!Array.prototype.copy) {
 
 if (!Array.prototype.intersect) {
     Array.prototype.intersect = function(withArray) {
-        const array = [];
-        this.forEach(item => {
-            if (withArray.indexOf(item) > -1) {
-                array.push(item);
-            }
-        });
-        return array;
+        const array = this;
+        return array.filter(item => withArray.includes(item));
     };
 }
 

@@ -24,3 +24,12 @@ if (!Array.prototype.includes) {
         return a.indexOf(toFind) !== -1 || (isNaN(toFind) ? forNaN !== -1 && (arrayNaN && toFindIsNotString) : false);
     }
 }
+
+if (!Array.prototype.fill) {
+    Array.prototype.fill = function(value) {
+        for (let i = 0; i < this.length; i++) {
+            this[i] = value;
+        }
+        return this;
+    }
+}
