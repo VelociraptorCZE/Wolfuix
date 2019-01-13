@@ -8,27 +8,35 @@ import WolfuixElemFactory from "../dom/WolfuixElemFactory.js";
 import WolfuixWarn from "../warn/WolfuixWarn.js";
 
 export default class WolfuixFormData {
-    constructor(id) {
+    constructor(id, allow) {
         this.id = id;
-        this.inputs = WolfuixElemFactory.getElem("#" + id + " input");
+        this.allow = Array.isArray(allow) ? allow : [];
+        this.inputs = this.__inputs;
+
         if (this.inputs instanceof NodeList && this.inputs.length === 0) {
             this.inputs = [];
         }
         this.vals = [];
     }
 
+    get __inputs() {
+        let ignoreList = ["button", "hidden", "submit", "radio", "checkbox", "reset"].filter(key => !this.allow.includes(key));
+
+        const inputs = Array.from(WolfuixElemFactory.getElem(`#${this.id} input`));
+        return inputs.filter(input => !ignoreList.includes(input.type));
+    }
+
     append(name, value) {
         this.vals.push({ name: name, value: value });
     }
 
-    entries() {
-        const entries = [];
-        this.formInputs().forEach(el => {
-            entries.push([el.name, el.value]);
-        });
-        return entries;
+    deserialize(url) {
+        return WolfuixFormData.deserialize(url);
     }
 
+    entries() {
+        return this.formInputs().map(el => [el.name, /radio|checkbox/.test(el.type) ? el.checked : el.value]);
+    }
 
     formInputs({ inputs, vals } = this) {
         return [...inputs, ...vals];
@@ -39,12 +47,9 @@ export default class WolfuixFormData {
     }
 
     serialize() {
-        let url = "";
-        this.entries().forEach(entry => {
-           url += encodeURIComponent(entry[0]) + "=" + encodeURIComponent(entry[1]) + "&";
-        });
-        url = url.slice(0, url.length - 1);
-        return url;
+        return this.entries().map(entry => `${encodeURIComponent(entry[0])}=${encodeURIComponent(entry[1])}&`)
+            .join("")
+            .slice(0, -1);
     }
 
     toJSON() {
@@ -59,12 +64,12 @@ export default class WolfuixFormData {
         let data = {};
         try {
             data = new FormData();
-            this.formInputs().forEach(val => {
-                data.append(val.name, val.value);
+            this.entries().forEach(val => {
+                data.append(val[0], val[1]);
             });
         }
         catch(e) {
-            if (typeof FormData === "undefined") {
+            if (!window.FormData) {
                 console.warn(WolfuixWarn.exceptions.nativeFunctionIsNotDefined({ target: "FormData", ex: e }));
             }
         }
@@ -72,10 +77,10 @@ export default class WolfuixFormData {
     }
 
     valuesAsObject() {
-        const o = {};
-        this.formInputs().forEach(val => {
-            o[val.name] = val.value;
-        });
-        return o;
+        return this.entries().toObject();
+    }
+
+    static deserialize(url) {
+        return url.split("&").map(value => value.split("=").map(s => decodeURIComponent(s)));
     }
 }
