@@ -21,8 +21,8 @@ export default class Wolfuix {
         return new WolfuixFormData(id, allow);
     }
 
-    static createElement(name, attrs, children, content) {
-        return WolfuixElemTools.createElement(name, attrs, children, content);
+    static get createElement() {
+        return WolfuixElemTools.createElement;
     }
 
     get component() {

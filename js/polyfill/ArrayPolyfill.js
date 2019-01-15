@@ -6,9 +6,14 @@
 
 if (!Array.from) {
     Array.from = function(target) {
-        const result = [];
-        for (let i = 0; i < target.length; i++) {
-            result.push(target[i]);
+        let result = [];
+        if (typeof target === "string") {
+            result = target.split("");
+        }
+        else {
+            for (let i = 0; i < target.length; i++) {
+                result.push(target[i]);
+            }
         }
         return result;
     }

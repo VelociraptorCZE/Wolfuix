@@ -21,17 +21,12 @@ export default class WolfuixFormData {
 
     get __inputs() {
         let ignoreList = ["button", "hidden", "submit", "radio", "checkbox", "reset"].filter(key => !this.allow.includes(key));
-
-        const inputs = Array.from(WolfuixElemFactory.getElem(`#${this.id} input`));
+        const inputs = Array.from(WolfuixElemFactory.getElem(`#${this.id} input, #${this.id} select`));
         return inputs.filter(input => !ignoreList.includes(input.type));
     }
 
     append(name, value) {
         this.vals.push({ name: name, value: value });
-    }
-
-    deserialize(url) {
-        return WolfuixFormData.deserialize(url);
     }
 
     entries() {
