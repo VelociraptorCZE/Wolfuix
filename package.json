@@ -1,10 +1,12 @@
 {
-	"name": "wolfuix",
-	"version": "0.8.4",
-	"authors": [
-		{
-			"name": "Simon Raichl",
-			"homepage": "https://github.com/velociraptorcze"
-		}
-	]
+    "name": "wolfuix",
+    "version": "0.8.4",
+    "authors": [
+        {
+            "name": "Simon Raichl",
+            "homepage": "https://github.com/velociraptorcze"
+        }
+    ],
+    "license": "MIT",
+    "homepage": "https://velociraptorcze.github.io/wolfuix-docs/"
 }
