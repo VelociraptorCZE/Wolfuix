@@ -9,9 +9,6 @@ import WolfuixBaseComponent from "./WolfuixBaseComponent.js";
 export default class WolfuixTabLayout extends WolfuixBaseComponent {
     constructor(elems, props) {
         super(elems, props);
-        if (!this.props.classOnActive) {
-            this.props.classOnActive = "active";
-        }
     }
 
     _appendListener() {

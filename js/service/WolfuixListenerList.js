@@ -9,6 +9,7 @@ const listeners = [
     "blur",
     "focusin",
     "focusout",
+    "focus",
     "mouseenter",
     "mouseleave",
     "mousemove",

@@ -4,13 +4,15 @@
  * MIT License
  */
 
+import {} from "../polyfill/Polyfills.js";
+import {} from "./Arrays.js";
 import WolfuixElemFactory from "../dom/WolfuixElemFactory.js";
 import WolfuixWarn from "../warn/WolfuixWarn.js";
 
 export default class WolfuixFormData {
     constructor(id, allow) {
         this.id = id;
-        this.allow = Array.isArray(allow) ? allow : [];
+        this.allow = Array.isArray(allow) ? allow : [""];
         this.inputs = this.__inputs;
 
         if (this.inputs instanceof NodeList && this.inputs.length === 0) {
@@ -20,9 +22,21 @@ export default class WolfuixFormData {
     }
 
     get __inputs() {
-        let ignoreList = ["button", "hidden", "submit", "radio", "checkbox", "reset"].filter(key => !this.allow.includes(key));
-        const inputs = Array.from(WolfuixElemFactory.getElem(`#${this.id} input, #${this.id} select`));
-        return inputs.filter(input => !ignoreList.includes(input.type));
+        const { id, allow } = this;
+        const inputs = Array.from(WolfuixElemFactory.getElem(`#${id} input, #${id} select`));
+        let ignoreList, allowParticularInputs;
+
+        if (allow[0].includes("allow only")) {
+            allowParticularInputs = allow[0].replace(/allow only| /g, "").split(",");
+        }
+        else {
+            ignoreList = ["button", "hidden", "submit", "radio", "checkbox", "reset"].filter(key => !allow.includes(key));
+            allow.forEach(item => item[0] === "!" ? ignoreList.push(item.slice(1)) : 0);
+        }
+
+        return inputs.filter(input =>
+            ignoreList ? !ignoreList.includes(input.type) : allowParticularInputs.includes(input.type)
+        );
     }
 
     append(name, value) {

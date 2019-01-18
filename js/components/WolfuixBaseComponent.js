@@ -13,6 +13,7 @@ export default class WolfuixBaseComponent {
         this.el = WolfuixElemFactory;
         this.elem = this.el.getElems(elems);
         this.props = props instanceof Object ? props : {};
+        this.props.classOnActive = props.classOnActive ? props.classOnActive : "active";
         this.listeners = WolfuixListenerList;
         this._appendListener();
     }

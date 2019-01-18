@@ -11,7 +11,6 @@ export default class WolfuixListBox extends WolfuixBaseComponent {
         super(elem, props);
         this._activeElem = 0;
         this.elem = this.elem.children;
-        this.props.classOnActive = props.classOnActive ? props.classOnActive : "active";
         this._appendListener();
     }
 
