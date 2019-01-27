@@ -14,8 +14,7 @@ if (!Array.prototype.copy) {
 
 if (!Array.prototype.intersect) {
     Array.prototype.intersect = function(withArray) {
-        const array = this;
-        return array.filter(item => withArray.includes(item));
+        return this.filter(item => withArray.includes(item));
     };
 }
 
@@ -26,5 +25,11 @@ if (!Array.prototype.toObject) {
             o[item[0]] = item[1];
         });
         return o;
+    }
+}
+
+if (!Array.prototype.like) {
+    Array.prototype.like = function (query) {
+        return this.filter(item => item.includes(query));
     }
 }

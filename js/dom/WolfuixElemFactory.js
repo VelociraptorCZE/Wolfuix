@@ -12,7 +12,7 @@ export default class WolfuixElemFactory {
             Object.keys(o).forEach(k1 => {
                 if (typeof o[k1] === "object") {
                     Object.keys(o[k1]).forEach(k2 => {
-                        o[k1][k2] = this.getElems(o[k1][k2]);
+                        o[k1][k2] = this.getElems(o[k1][k2], strict);
                     });
                 }
                 else {

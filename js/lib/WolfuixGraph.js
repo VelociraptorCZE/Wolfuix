@@ -8,6 +8,7 @@ export default class WolfuixGraph {
     constructor(props) {
         this.props = props instanceof Object ? props : {};
         this.canvas = {};
+        if (!this.props.lineWidth) this.props.lineWidth = 25;
         this.newCanvas = props.target || props.element;
     }
 
@@ -22,6 +23,7 @@ export default class WolfuixGraph {
     drawGraph(data) {
         const { canvas } = this;
         this.data = data;
+        this.data.radius = !isFinite(data.radius) ? 50 : data.radius;
         let angle = 0;
         canvas.context.lineWidth = this.props.lineWidth;
         data.parts.forEach(part => {
