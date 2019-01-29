@@ -46,7 +46,7 @@ export default class WolfuixGraph {
         if (props.outline) {
             canvas.context.lineWidth = props.outline.width;
             canvas.context.strokeStyle = props.outline.color;
-            const particularOutline = (upper) => {
+            const particularOutline = upper => {
                 canvas.context.beginPath();
                 canvas.context.arc(data.x, data.y,data.radius + (props.lineWidth / 2 * (upper ? 1 : -1)), 0, 2 * Math.PI);
                 canvas.context.stroke();

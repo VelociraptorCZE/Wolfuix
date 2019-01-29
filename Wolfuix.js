@@ -11,7 +11,7 @@ import {} from "./js/lib/Arrays.js";
 import WolfuixFormData from "./js/lib/WolfuixFormData.js";
 // Components
 import WolfuixTabLayout from "./js/components/WolfuixTabLayout.js";
-import WolfuixListBox from "./js/components/WolfuixListBox.js";
+import DynamicComponent from "./js/components/DynamicComponent";
 import WolfuixButton from "./js/components/WolfuixButton.js";
 // DOM and tools
 import WolfuixElemTools from "./js/dom/WolfuixElemTools.js";
@@ -28,7 +28,7 @@ export default class Wolfuix {
     get component() {
         return {
             get tabLayout() { return WolfuixTabLayout },
-            get listBox() { return WolfuixListBox },
+            get dynamicComponent() { return DynamicComponent },
             get button() { return WolfuixButton }
         };
     }

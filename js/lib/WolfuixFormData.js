@@ -23,7 +23,7 @@ export default class WolfuixFormData {
 
     get __inputs() {
         const { id, allow } = this;
-        const inputs = Array.from(WolfuixElemFactory.getElem(`#${id} input, #${id} select`));
+        const inputs = Array.from(WolfuixElemFactory.getElem(`#${id} input, #${id} select, #${id} textarea`));
         let ignoreList, allowParticularInputs;
 
         if (allow[0].includes("allow only")) {

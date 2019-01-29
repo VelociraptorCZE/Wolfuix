@@ -4,6 +4,8 @@
  * MIT License
  */
 
+import {} from "../polyfill/Polyfills.js";
+
 if (!Array.prototype.copy) {
     Array.prototype.copy = function(fromArray, index = 0, length = 1) {
         const array = this;
