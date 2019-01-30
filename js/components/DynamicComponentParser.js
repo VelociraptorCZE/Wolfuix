@@ -11,13 +11,13 @@ export default class DynamicComponentParser {
 
     _parseVariable(variable, content) {
         let tempVar = this._getVarName(variable), parsedVar;
-        parsedVar = this._getVar(tempVar, this.context);
+        parsedVar = this._getVar(tempVar);
         return content.replace(variable, parsedVar);
     }
 
     parseVariables(variables, content) {
         variables.forEach(variable => {
-            content = this._parseVariable(variable, content, this.context);
+            content = this._parseVariable(variable, content);
         });
         return content;
     }
@@ -41,7 +41,7 @@ export default class DynamicComponentParser {
             content: foreach.match(/}.+{(\s+|)\/foreach(\s+|)}/g)[0].slice(1).replace(/{(\s+|)\/foreach(\s+|)}/, "")
         };
 
-        const collection = this._getVar(loop.collection, this.context);
+        const collection = this._getVar(loop.collection);
         let vars = this.getVariables(loop.content);
         vars.forEach((v, i) => {
             const _var = v.replace(/ /g, "");

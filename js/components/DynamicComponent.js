@@ -42,9 +42,7 @@ export default class DynamicComponent {
         }
 
         const variables = parser.getVariables(content);
-        if (variables) {
-            content = variables ? parser.parseVariables(variables, content) : content;
-        }
+        content = variables ? parser.parseVariables(variables, content) : content;
 
         target.innerHTML = content;
     }

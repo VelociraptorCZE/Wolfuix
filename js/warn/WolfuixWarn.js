@@ -23,7 +23,7 @@ export default class WolfuixWarn {
                 ${params.ex}`;
             },
             componentForeachFailure: params => {
-                return {main: `${shared} Failed to parse a foreach in your source, probably the bad pattern or bad parameters?\n\n${params}\n\nRight pattern:\n`,
+                return {main: `${shared} Failed to parse a foreach in your source, probably the bad pattern or bad parameters?\n\n${params}\n\nCorrect pattern:\n`,
                         pattern: ["%c{foreach : collection : item} //source {/foreach}", "color:blue;font-weight:700"]};
             }
         }
