@@ -33,27 +33,41 @@ export default class DynamicComponentParser {
 
     parseForeach(foreach, content) {
         let newContent = "";
-        const loopExpression = foreach.replace(/ /g, "").match(/{foreach:.+:.+?}/g)[0].split(":");
+        const loopExpression = foreach.replace(/ /g, "").match(/{foreach:.+:[\w,]+?}/g)[0].split(":");
+
         const loop = {
             collection: loopExpression[1],
-            var: `{{${loopExpression[2].replace("}", "")}}}`,
+            var: this._getForeachArgs(loopExpression[2]),
             content: foreach.match(/}.+{(\s+|)\/foreach(\s+|)}/g)[0].slice(1).replace(/{(\s+|)\/foreach(\s+|)}/, "")
         };
 
         const collection = this._getVar(loop.collection, this.context);
         let vars = this.getVariables(loop.content);
-        vars.forEach(_var => loop.content = loop.content.replace(_var, _var.replace(/ /g, "")));
-        vars = vars.map(_var => _var.replace(/ /g, ""));
+        vars.forEach((v, i) => {
+            const _var = v.replace(/ /g, "");
+            loop.content = loop.content.replace(v, _var);
+            vars[i] = _var;
+        });
 
-        collection.forEach(item => {
-            let varIndex = vars.indexOf(loop.var);
-            let tempContent = loop.content.replace(vars[varIndex], item);
-            vars = vars.splice(varIndex, 1);
+        collection.forEach((item, iteration) => {
+            let foreachVars = [loop.var[0], loop.var[1]].filter(v => v !== void 0),
+                tempContent = loop.content,
+                args = [item, iteration];
+
+            foreachVars.forEach(foreachVar => {
+                tempContent = tempContent.replace(new RegExp(foreachVar, "g"), args[0]);
+                args.shift();
+            });
+
             tempContent = this.parseVariables(vars, tempContent);
             newContent += tempContent;
         });
 
         return content.replace(foreach, newContent);
+    }
+
+    _getForeachArgs(arg) {
+        return arg.replace("}", "").split(",").map(_var => `{{${_var}}}`);
     }
 
     _getVarName(variable) {

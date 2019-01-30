@@ -10,8 +10,8 @@ import WolfuixWarn from "../warn/WolfuixWarn.js";
 
 export default class DynamicComponent {
     constructor(content, target) {
-        this.content = content.replace(/\n/g, "");
         this.target = WolfuixElemFactory.getElem(target);
+        this.content = (typeof content === "string" ? content : this.target.innerHTML).replace(/\n/g, "");
         this.parser = new DynamicComponentParser();
         this.invokedErrors = {
             foreach: false
@@ -34,7 +34,7 @@ export default class DynamicComponent {
                     if (!this.invokedErrors.foreach) {
                         const fail = WolfuixWarn.exceptions.componentForeachFailure(e);
                         console.warn(fail.main);
-                        console.log(...fail.pattern);
+                        console.warn(...fail.pattern);
                         this.invokedErrors.foreach = true;
                     }
                 }
