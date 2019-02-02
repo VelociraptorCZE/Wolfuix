@@ -9,12 +9,24 @@ import DynamicComponentParser from "./DynamicComponentParser.js";
 import WolfuixWarn from "../warn/WolfuixWarn.js";
 
 export default class DynamicComponent {
-    constructor(content, target) {
-        this.target = WolfuixElemFactory.getElem(target);
+    constructor(content = "", target) {
+        this.newTarget = target;
         this.content = (typeof content === "string" ? content : this.target.innerHTML).replace(/\n/g, "");
         this.parser = new DynamicComponentParser();
         this.invokedErrors = {
-            foreach: false
+            foreach: false,
+            var: false
+        }
+    }
+
+    set newTarget(target) {
+        const _target = WolfuixElemFactory.getElem(target);
+        if (!_target) {
+            this.target = document.body;
+            console.warn(WolfuixWarn.exceptions.DOM_Exception(target, "As the target is currently set document.body as the default fallback."));
+        }
+        else {
+            this.target = _target;
         }
     }
 
@@ -24,7 +36,7 @@ export default class DynamicComponent {
     }
 
     render({ target, content, parser } = this) {
-        const loops = content.match(/{(\s+|)foreach.+?}.*?{(\s+|)\/foreach(\s+|)}/g);
+        const loops = DynamicComponentParser.getLoops(content);
         if (loops) {
             loops.forEach(loop => {
                 try {
@@ -40,9 +52,16 @@ export default class DynamicComponent {
                 }
             });
         }
-
-        const variables = parser.getVariables(content);
-        content = variables ? parser.parseVariables(variables, content) : content;
+        const variables = DynamicComponentParser.getVariables(content);
+        try {
+            content = variables ? parser.parseVariables(variables, content) : content;
+        }
+        catch (e) {
+            if (!this.invokedErrors.var) {
+                console.warn(WolfuixWarn.exceptions.componentVarFailure(e));
+                this.invokedErrors.var = true;
+            }
+        }
 
         target.innerHTML = content;
     }

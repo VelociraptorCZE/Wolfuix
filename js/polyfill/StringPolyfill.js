@@ -5,7 +5,9 @@
  */
 
 if (!String.prototype.includes) {
-    String.prototype.includes = function(toFind) {
-        return this.indexOf(toFind) !== -1;
-    }
+    Object.defineProperty(String.prototype, "includes", {
+        value: function(toFind) {
+            return this.indexOf(toFind) !== -1;
+        }
+    });
 }

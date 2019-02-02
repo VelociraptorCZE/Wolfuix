@@ -5,12 +5,16 @@
  */
 
 export default class DynamicComponentParser {
+    constructor() {
+        this.foreachEnd = "{(\\s+|)/foreach(\\s+|)}";
+    }
+
     set newContext(context) {
         this.context = context;
     }
 
     _parseVariable(variable, content) {
-        let tempVar = this._getVarName(variable), parsedVar;
+        let tempVar = DynamicComponentParser._getVarName(variable), parsedVar;
         parsedVar = this._getVar(tempVar);
         return content.replace(variable, parsedVar);
     }
@@ -31,18 +35,20 @@ export default class DynamicComponentParser {
         return parsedVar;
     }
 
-    parseForeach(foreach, content) {
+    parseForeach(foreach, content, { foreachEnd } = this) {
         let newContent = "";
-        const loopExpression = foreach.replace(/ /g, "").match(/{foreach:.+:[\w,]+?}/g)[0].split(":");
+        const loopExpression = foreach.replace(/ /g, "")
+            .match(/{foreach:.+:[\w,]+?}/g)[0].split(":");
 
         const loop = {
             collection: loopExpression[1],
-            var: this._getForeachArgs(loopExpression[2]),
-            content: foreach.match(/}.+{(\s+|)\/foreach(\s+|)}/g)[0].slice(1).replace(/{(\s+|)\/foreach(\s+|)}/, "")
+            var: DynamicComponentParser._getForeachArgs(loopExpression[2]),
+            content: foreach.match(new RegExp(`}.+${foreachEnd}`, "g"))
+                [0].slice(1).replace(new RegExp(foreachEnd), "")
         };
 
         const collection = this._getVar(loop.collection);
-        let vars = this.getVariables(loop.content);
+        let vars = DynamicComponentParser.getVariables(loop.content);
         vars.forEach((v, i) => {
             const _var = v.replace(/ /g, "");
             loop.content = loop.content.replace(v, _var);
@@ -66,15 +72,19 @@ export default class DynamicComponentParser {
         return content.replace(foreach, newContent);
     }
 
-    _getForeachArgs(arg) {
+    static _getForeachArgs(arg) {
         return arg.replace("}", "").split(",").map(_var => `{{${_var}}}`);
     }
 
-    _getVarName(variable) {
+    static _getVarName(variable) {
         return variable.replace(/[{ }]/g, "");
     }
 
-    getVariables(content) {
+    static getVariables(content) {
         return content.match(/{{.+?}}/g);
+    }
+
+    static getLoops(content) {
+        return content.match(/{(\s+|)foreach.+?}.*?{(\s+|)\/foreach(\s+|)}/g);
     }
 }

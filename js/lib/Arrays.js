@@ -7,31 +7,39 @@
 import {} from "../polyfill/Polyfills.js";
 
 if (!Array.prototype.copy) {
-    Array.prototype.copy = function(fromArray, index = 0, length = 1) {
-        const array = this;
-        array.push(...fromArray.splice(index, length));
-        return array;
-    };
+    Object.defineProperty(Array.prototype, "copy", {
+        value: function(fromArray, index = 0, length = 1) {
+            const array = this;
+            array.push(...fromArray.splice(index, length));
+            return array;
+        }
+    });
 }
 
 if (!Array.prototype.intersect) {
-    Array.prototype.intersect = function(withArray) {
-        return this.filter(item => withArray.includes(item));
-    };
+    Object.defineProperty(Array.prototype, "intersect", {
+        value: function(withArray) {
+            return this.filter(item => withArray.includes(item));
+        }
+    });
 }
 
 if (!Array.prototype.toObject) {
-    Array.prototype.toObject = function() {
-        const o = {};
-        this.forEach(item => {
-            o[item[0]] = item[1];
-        });
-        return o;
-    }
+    Object.defineProperty(Array.prototype, "toObject", {
+        value: function() {
+            const o = {};
+            this.forEach(item => {
+                o[item[0]] = item[1];
+            });
+            return o;
+        }
+    });
 }
 
 if (!Array.prototype.like) {
-    Array.prototype.like = function (query) {
-        return this.filter(item => item.includes(query));
-    }
+    Object.defineProperty(Array.prototype, "like", {
+        value: function(query) {
+            return this.filter(item => item.includes(query));
+        }
+    });
 }
