@@ -13,10 +13,14 @@ export default class WolfuixFormData {
     constructor(id, allow) {
         this.id = id;
         this.allow = Array.isArray(allow) ? allow : [""];
-        this.inputs = this.__inputs;
-
-        if (this.inputs instanceof NodeList && this.inputs.length === 0) {
-            this.inputs = [];
+        this.inputs = [];
+        try {
+            if (id) {
+                this.inputs = this.__inputs;
+            }
+        }
+        catch (e) {
+            console.warn(WolfuixWarn.exceptions.DOM_Exception(id, "Failed to get data from the specified form."));
         }
         this.vals = [];
     }
