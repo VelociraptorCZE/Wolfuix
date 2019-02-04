@@ -41,3 +41,25 @@ if (!Array.prototype.fill) {
         }
     });
 }
+
+if (!Array.prototype.flat) {
+    Object.defineProperty(Array.prototype, "flat", {
+        value: function() {
+            let array = this, i = 0;
+            while (true) {
+                const item = array[i];
+                if (Array.isArray(item)) {
+                    const rest = array.splice(i + 1);
+                    array = array.splice(0, i);
+                    item.forEach(sub => array.push(sub));
+                    array.push(...rest);
+                }
+                i++;
+                if (i >= array.length) {
+                    break;
+                }
+            }
+            return array;
+        }
+    });
+}

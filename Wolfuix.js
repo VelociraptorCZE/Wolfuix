@@ -11,7 +11,7 @@ import {} from "./js/lib/Arrays.js";
 import WolfuixFormData from "./js/lib/WolfuixFormData.js";
 // Components
 import WolfuixTabLayout from "./js/components/WolfuixTabLayout.js";
-import DynamicComponent from "./js/components/DynamicComponent";
+import DynamicComponent from "./js/components/DynamicComponent.js";
 import WolfuixButton from "./js/components/WolfuixButton.js";
 // DOM and tools
 import WolfuixElemTools from "./js/dom/WolfuixElemTools.js";

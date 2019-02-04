@@ -4,8 +4,8 @@
  * MIT License
  */
 
-import WolfuixElemFactory from "../dom/WolfuixElemFactory";
-import WolfuixWarn from "../warn/WolfuixWarn";
+import WolfuixElemFactory from "../dom/WolfuixElemFactory.js";
+import WolfuixWarn from "../warn/WolfuixWarn.js";
 
 export default class DragDropComponent {
     constructor(target, trigger) {
