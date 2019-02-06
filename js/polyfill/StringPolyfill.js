@@ -11,3 +11,11 @@ if (!String.prototype.includes) {
         }
     });
 }
+
+if (!String.prototype.repeat) {
+    Object.defineProperty(String.prototype, "repeat", {
+        value: function(n) {
+            return n ? Array(n).fill(this).join("") : "";
+        }
+    });
+}

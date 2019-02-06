@@ -18,24 +18,24 @@ export default class WolfuixElemFactory {
                 else {
                     const temp = o[k1];
                     o[k1] = this.getElem(o[k1], context);
-                    WolfuixElemFactory.throwException(o[k1], temp, strict);
+                    WolfuixElemFactory.__throwException(o[k1], temp, strict);
                 }
             });
         }
         else {
             const temp = o;
             o = this.getElem(o, context);
-            WolfuixElemFactory.throwException(o, temp, strict);
+            WolfuixElemFactory.__throwException(o, temp, strict);
         }
         return o;
     }
-
+    
     static getElem(selector, context = document) {
         return selector instanceof Element ? selector :
-        (/[.#\[\]=,* ]/.test(selector) ? context.querySelectorAll(selector) : context.getElementById(selector));
+            (/[.#\[\]=,* ]/.test(selector) ? context.querySelectorAll(selector) : context.getElementById(selector));
     }
 
-    static throwException(target, selector, strict) {
+    static __throwException(target, selector, strict) {
         if ((!target || (target instanceof NodeList && target.length === 0)) && strict) {
             console.warn(WolfuixWarn.exceptions.DOM_Exception(selector || target));
         }

@@ -65,9 +65,7 @@ export default class WolfuixFormData {
     }
 
     serialize() {
-        return this.entries().map(entry => `${encodeURIComponent(entry[0])}=${encodeURIComponent(entry[1])}&`)
-            .join("")
-            .slice(0, -1);
+        return this.entries().map(entry => `${encodeURIComponent(entry[0])}=${encodeURIComponent(entry[1])}`).join("&");
     }
 
     toJSON() {
