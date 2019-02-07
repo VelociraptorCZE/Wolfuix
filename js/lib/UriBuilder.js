@@ -20,8 +20,18 @@ export default class UriBuilder {
         return this.toString();
     }
 
-    get _queries() {
-        return "?" + Object.entries(this.queries).map(entry => entry.join("=")).join("&");
+    _transformUri(uri) {
+        const queries = Object.entries(this.queries);
+        if (uri.includes("?")) {
+            queries.forEach(q => uri = uri.replace(UriBuilder.__getQueryRegex(q[0]), ""));
+            uri[uri.length - 1] !== "&" && (uri += "&");
+        }
+        const query = (!uri.includes("?") && queries.length > 0 ? "?" : "") + queries.map(entry => entry.join("=")).join("&");
+        return (uri + query).replace(/&&/g, "&");
+    }
+
+    static __getQueryRegex(query) {
+        return new RegExp(`${query}?=.+?(&|$)`, "g");
     }
 
     static get currentLocation() {
@@ -32,7 +42,11 @@ export default class UriBuilder {
         this.queries[encodeURIComponent(name)] = encodeURIComponent(value);
     }
 
-    toString({ scheme, host, port, path, extraValue, _queries } = this) {
-        return scheme + host + (typeof port === "number" ? ":" : "") + port + (path !== "" ? "/" : "") + path + extraValue + _queries;
+    removeQuery(name) {
+        delete this.queries[encodeURIComponent(name)];
+    }
+
+    toString({ scheme, host, port, path, extraValue } = this) {
+        return this._transformUri(scheme + host + (typeof port === "number" ? ":" : "") + port + (path !== "" ? "/" : "") + path + extraValue);
     }
 }
