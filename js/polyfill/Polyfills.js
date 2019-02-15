@@ -5,6 +5,6 @@
  */
 
 // Polyfill import stack
-import {} from "./ObjectPolyfill.js";
-import {} from "./ArrayPolyfill.js";
-import {} from "./StringPolyfill.js";
+import "./ObjectPolyfill.js";
+import "./ArrayPolyfill.js";
+import "./StringPolyfill.js";

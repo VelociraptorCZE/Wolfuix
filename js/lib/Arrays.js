@@ -4,7 +4,7 @@
  * MIT License
  */
 
-import {} from "../polyfill/Polyfills.js";
+import "../polyfill/Polyfills.js";
 
 if (!Array.prototype.copy) {
     Object.defineProperty(Array.prototype, "copy", {

@@ -5,9 +5,9 @@
  */
 
 // Polyfills
-import {} from "./js/polyfill/Polyfills.js";
+import "./js/polyfill/Polyfills.js";
 // Libraries
-import {} from "./js/lib/Arrays.js";
+import "./js/lib/Arrays.js";
 import WolfuixFormData from "./js/lib/WolfuixFormData.js";
 // Components
 import WolfuixTabLayout from "./js/components/WolfuixTabLayout.js";
@@ -15,6 +15,7 @@ import DynamicComponent from "./js/components/DynamicComponent.js";
 import WolfuixButton from "./js/components/WolfuixButton.js";
 // DOM and tools
 import WolfuixElemTools from "./js/dom/WolfuixElemTools.js";
+import "./js/dom/AddEventListener.js";
 
 export default class Wolfuix {
     static formData(id, allow) {

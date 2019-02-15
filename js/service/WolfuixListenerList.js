@@ -4,7 +4,7 @@
  * MIT License
  */
 
-const listeners = [
+export default [
     "click",
     "blur",
     "focusin",
@@ -24,5 +24,3 @@ const listeners = [
     "submit",
     "select"
 ];
-
-export default listeners;

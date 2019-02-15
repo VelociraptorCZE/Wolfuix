@@ -4,7 +4,7 @@
  * MIT License
  */
 
-import {} from "../polyfill/Polyfills.js";
+import "../polyfill/Polyfills.js";
 
 export default class UriBuilder {
     constructor(scheme = "https://", host = "", port = "", path = "", extraValue = "") {
@@ -27,7 +27,7 @@ export default class UriBuilder {
             uri[uri.length - 1] !== "&" && (uri += "&");
         }
         const query = (!uri.includes("?") && queries.length > 0 ? "?" : "") + queries.map(entry => entry.join("=")).join("&");
-        return (uri + query).replace(/&&/g, "&");
+        return (uri + query).replace(/&&/g, "&").replace(/\?&/g, "?");
     }
 
     static __getQueryRegex(query) {

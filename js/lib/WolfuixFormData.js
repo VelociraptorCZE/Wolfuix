@@ -4,8 +4,8 @@
  * MIT License
  */
 
-import {} from "../polyfill/Polyfills.js";
-import {} from "./Arrays.js";
+import "../polyfill/Polyfills.js";
+import "./Arrays.js";
 import WolfuixElemFactory from "../dom/WolfuixElemFactory.js";
 import WolfuixWarn from "../warn/WolfuixWarn.js";
 

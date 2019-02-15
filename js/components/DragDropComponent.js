@@ -8,11 +8,13 @@ import WolfuixElemFactory from "../dom/WolfuixElemFactory.js";
 import WolfuixWarn from "../warn/WolfuixWarn.js";
 
 export default class DragDropComponent {
-    constructor(target, trigger) {
+    constructor(target, trigger, cursor) {
         try {
             this.newTarget = target;
             this.trigger = trigger ? WolfuixElemFactory.getElem(trigger) : this.target;
             this.active = false;
+            this.clickCoords = {};
+            this.cursor = cursor;
             this.init();
         }
         catch (e) {
@@ -25,24 +27,36 @@ export default class DragDropComponent {
         this.target.style.position = "absolute";
     }
 
-    init({ trigger, target } = this) {
+    get _target() {
+        return this.target === this.trigger ? this.target : this.trigger;
+    }
+
+    init({ trigger, target, active, clickCoords, cursor } = this) {
         let events = [
             { type: "mousedown", value: true, target: trigger },
             { type: "mouseup", value: false, target: window }
         ];
-        events.forEach(event => event.target.addEventListener(event.type, () => this.active = event.value));
+
+        events.forEach(event => event.target.addEventListener(event.type, e => {
+            active = event.value;
+            if (active) {
+                const { left, top } = target.getBoundingClientRect();
+                clickCoords.x = e.clientX - left;
+                clickCoords.y = e.clientY - top;
+            }
+        }));
+
         window.addEventListener("mousemove", e => {
-            if (this.active) {
-                const { clientX, clientY } = e;
+            if (active) {
                 events = [
-                    { type: "left", value: clientX - target.offsetWidth / 2 + "px" },
-                    { type: "top", value: clientY - target.offsetHeight / 2 + "px" },
-                    { type: "cursor", value: "grabbing" }
+                    { type: "left", value: e.clientX - clickCoords.x + "px" },
+                    { type: "top", value: e.clientY - clickCoords.y + "px" }
                 ];
                 events.forEach(event => target.style[event.type] = event.value);
+                this._target.style.cursor = cursor || "grabbing";
             }
             else {
-                [trigger, target].forEach(item => item.style.cursor = "grab");
+                this._target.style.cursor = cursor || "grab";
             }
         });
     }
