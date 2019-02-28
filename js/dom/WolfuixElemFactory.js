@@ -32,7 +32,7 @@ export default class WolfuixElemFactory {
     
     static getElem(selector, context = document) {
         return selector instanceof Element ? selector :
-            (/[.#\[\]=,* ]/.test(selector) ? context.querySelectorAll(selector) : context.getElementById(selector));
+            (/[.#\[\]=,* ]/.test(selector) ? context.querySelectorAll(selector) : document.getElementById(selector));
     }
 
     static __throwException(target, selector, strict) {

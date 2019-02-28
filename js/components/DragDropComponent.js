@@ -8,7 +8,7 @@ import WolfuixElemFactory from "../dom/WolfuixElemFactory.js";
 import WolfuixWarn from "../warn/WolfuixWarn.js";
 
 export default class DragDropComponent {
-    constructor(target, trigger, cursor) {
+    constructor(target, trigger, cursor = {}) {
         try {
             this.newTarget = target;
             this.trigger = trigger ? WolfuixElemFactory.getElem(trigger) : this.target;
@@ -33,31 +33,41 @@ export default class DragDropComponent {
 
     init({ trigger, target, active, clickCoords, cursor } = this) {
         let events = [
-            { type: "mousedown", value: true, target: trigger },
-            { type: "mouseup", value: false, target: window }
+            { type: ["touchstart", "mousedown"], value: true, target: trigger },
+            { type: ["touchend", "mouseup"], value: false, target: window }
         ];
 
-        events.forEach(event => event.target.addEventListener(event.type, e => {
-            active = event.value;
-            if (active) {
-                const { left, top } = target.getBoundingClientRect();
-                clickCoords.x = e.clientX - left;
-                clickCoords.y = e.clientY - top;
-            }
-        }));
+        events.forEach(event => {
+            event.type.forEach(evType => {
+                event.target.addEventListener(evType, e => {
+                    active = event.value;
+                    if (active) {
+                        const {left, top} = target.getBoundingClientRect();
+                        const {clientX, clientY} = (e.touches || [{}])[0];
+                        clickCoords.x = (clientX || e.clientX) - left;
+                        clickCoords.y = (clientY || e.clientY) - top;
+                    }
+                });
+            });
+        });
 
-        window.addEventListener("mousemove", e => {
-            if (active) {
-                events = [
-                    { type: "left", value: e.clientX - clickCoords.x + "px" },
-                    { type: "top", value: e.clientY - clickCoords.y + "px" }
-                ];
-                events.forEach(event => target.style[event.type] = event.value);
-                this._target.style.cursor = cursor || "grabbing";
-            }
-            else {
-                this._target.style.cursor = cursor || "grab";
-            }
+        const moveEvents = ["mousemove", "touchmove"];
+
+        moveEvents.forEach(moveEvent => {
+            window.addEventListener(moveEvent, ({ clientX, clientY, touches = [{}] }) => {
+                const { pageX, pageY } = touches[0];
+                if (active) {
+                    events = [
+                        { type: "left", value: (pageX || clientX) - clickCoords.x + "px" },
+                        { type: "top", value: (pageY || clientY) - clickCoords.y + "px" }
+                    ];
+                    events.forEach(event => target.style[event.type] = event.value);
+                    this._target.style.cursor = cursor.grabbed || "grabbing";
+                }
+                else {
+                    this._target.style.cursor = cursor.hover || "grab";
+                }
+            });
         });
     }
 }

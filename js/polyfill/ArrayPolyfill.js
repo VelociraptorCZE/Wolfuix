@@ -5,28 +5,15 @@
  */
 
 if (!Array.from) {
-    Array.from = function(target) {
-        let result = [];
-        if (typeof target === "string") {
-            result = target.split("");
-        }
-        else {
-            for (let i = 0; i < target.length; i++) {
-                result.push(target[i]);
-            }
-        }
-        return result;
+    Array.from = function(array) {
+        return [].slice.call(array);
     }
 }
 
 if (!Array.prototype.includes) {
     Object.defineProperty(Array.prototype, "includes", {
         value: function(toFind) {
-            let a = this,
-                forNaN = a.map(a => a + "").indexOf("NaN"),
-                arrayNaN = typeof a[forNaN] !== "string",
-                toFindIsNotString = typeof toFind !== "string";
-            return a.indexOf(toFind) !== -1 || (isNaN(toFind) && toFind !== void 0 ? forNaN !== -1 && (arrayNaN && toFindIsNotString) : false);
+            return this.some(val => val === toFind || (toFind + "" === "NaN" && val + "" === "NaN") && typeof val === typeof toFind);
         }
     });
 }
