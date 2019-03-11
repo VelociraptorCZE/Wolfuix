@@ -7,32 +7,27 @@
 export default class WolfuixGraph {
     constructor(props) {
         this.props = props instanceof Object ? props : {};
-        this.canvas = {};
         if (!this.props.lineWidth) this.props.lineWidth = 25;
         this.newCanvas = props.target || props.element;
     }
 
     set newCanvas(elem) {
-        const el = document.getElementById(elem);
-        this.canvas = {
-            elem: el,
-            context: el.getContext("2d")
-        }
+        this.context = document.getElementById(elem).getContext("2d");
     }
 
     drawGraph(data) {
-        const { canvas } = this;
+        const { context } = this;
         this.data = data;
         this.data.radius = !isFinite(data.radius) ? 50 : data.radius;
         let angle = 0;
-        canvas.context.lineWidth = this.props.lineWidth;
+        context.lineWidth = this.props.lineWidth;
         data.parts.forEach(part => {
             const temporaryAngle = angle + part.percent;
-            canvas.context.strokeStyle = part.color ? part.color : "#000";
-            canvas.context.beginPath();
-            canvas.context.arc(data.x, data.y, data.radius, WolfuixGraph.getAngle(angle), WolfuixGraph.getAngle(temporaryAngle));
-            canvas.context.stroke();
-            canvas.context.closePath();
+            context.strokeStyle = part.color ? part.color : "#000";
+            context.beginPath();
+            context.arc(data.x, data.y, data.radius, WolfuixGraph.getAngle(angle), WolfuixGraph.getAngle(temporaryAngle));
+            context.stroke();
+            context.closePath();
             angle = temporaryAngle;
         });
         this._drawOutline();
@@ -42,15 +37,15 @@ export default class WolfuixGraph {
         return a / 50 * Math.PI;
     }
 
-    _drawOutline({ canvas, props, data } = this) {
+    _drawOutline({ context, props, data } = this) {
         if (props.outline) {
-            canvas.context.lineWidth = props.outline.width;
-            canvas.context.strokeStyle = props.outline.color;
+            context.lineWidth = props.outline.width;
+            context.strokeStyle = props.outline.color;
             const particularOutline = upper => {
-                canvas.context.beginPath();
-                canvas.context.arc(data.x, data.y,data.radius + (props.lineWidth / 2 * (upper ? 1 : -1)), 0, 2 * Math.PI);
-                canvas.context.stroke();
-                canvas.context.closePath();
+                context.beginPath();
+                context.arc(data.x, data.y,data.radius + (props.lineWidth / 2 * (upper ? 1 : -1)), 0, 2 * Math.PI);
+                context.stroke();
+                context.closePath();
             };
             particularOutline();
             particularOutline(true);

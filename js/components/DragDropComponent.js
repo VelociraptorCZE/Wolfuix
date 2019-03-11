@@ -47,7 +47,7 @@ export default class DragDropComponent {
                         clickCoords.x = (clientX || e.clientX) - left;
                         clickCoords.y = (clientY || e.clientY) - top;
                     }
-                });
+                }, { passive: true });
             });
         });
 
@@ -58,8 +58,8 @@ export default class DragDropComponent {
                 const { pageX, pageY } = touches[0];
                 if (active) {
                     events = [
-                        { type: "left", value: (pageX || clientX) - clickCoords.x + "px" },
-                        { type: "top", value: (pageY || clientY) - clickCoords.y + "px" }
+                        { type: "left", value: (pageX || clientX + pageXOffset) - clickCoords.x + "px" },
+                        { type: "top", value: (pageY || clientY + pageYOffset) - clickCoords.y + "px" }
                     ];
                     events.forEach(event => target.style[event.type] = event.value);
                     this._target.style.cursor = cursor.grabbed || "grabbing";
@@ -67,7 +67,7 @@ export default class DragDropComponent {
                 else {
                     this._target.style.cursor = cursor.hover || "grab";
                 }
-            });
+            }, { passive: true });
         });
     }
 }
