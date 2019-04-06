@@ -30,7 +30,7 @@ export default class WolfuixWarn {
                 return `${shared} Failed to parse a variable in your source, probably the bad context?\n\n${params}`;
             },
             wrongType: params => {
-                return `${shared} It it not possible to use type ${params.type}, desired type: ${params.desiredType}\n\n${params.ex}`;
+                return `${shared} It it not possible to use instance of ${params.type}, desired type: ${params.desiredType}\n\n${params.ex}`;
             }
         }
     }

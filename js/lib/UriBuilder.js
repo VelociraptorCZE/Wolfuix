@@ -23,7 +23,7 @@ export default class UriBuilder {
     _transformUri(uri) {
         const queries = Object.entries(this.queries);
         if (uri.includes("?")) {
-            queries.forEach(q => uri = uri.replace(UriBuilder.__getQueryRegex(q[0]), ""));
+            queries.forEach(([query]) => uri = uri.replace(UriBuilder.__getQueryRegex(query), ""));
             uri[uri.length - 1] !== "&" && (uri += "&");
         }
         const query = (!uri.includes("?") && queries.length > 0 ? "?" : "") + queries.map(entry => entry.join("=")).join("&");

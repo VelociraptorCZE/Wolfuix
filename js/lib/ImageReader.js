@@ -4,7 +4,7 @@
  * MIT License
  */
 
-import WolfuixWarn from "../warn/WolfuixWarn";
+import WolfuixWarn from "../warn/WolfuixWarn.js";
 
 export default class ImageReader {
     constructor (file = {}) {
@@ -37,7 +37,7 @@ export default class ImageReader {
                 if (throwError) {
                     console.warn(WolfuixWarn.exceptions.wrongType({
                         ex: e,
-                        type: typeof _file,
+                        type: _file.constructor.name,
                         desiredType: "Blob"
                     }));
                 }

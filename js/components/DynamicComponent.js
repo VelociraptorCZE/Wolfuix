@@ -5,13 +5,14 @@
  */
 
 import WolfuixElemFactory from "../dom/WolfuixElemFactory.js";
-import DynamicComponentParser from "./DynamicComponentParser.js";
+import DynamicComponentParser from "./_DynamicComponentParser/DynamicComponentParser.js";
 import WolfuixWarn from "../warn/WolfuixWarn.js";
 
 export default class DynamicComponent {
-    constructor(content = "", target) {
+    constructor(content = "", target, options = {}) {
         this.newTarget = target;
         this.content = (typeof content === "string" ? content : this.target.innerHTML).replace(/\n/g, "");
+        this.options = options;
         this.parser = new DynamicComponentParser();
         this.invokedErrors = {
             foreach: false,
@@ -35,7 +36,7 @@ export default class DynamicComponent {
         return this;
     }
 
-    render({ target, content, parser } = this) {
+    render({ target, content, parser, options } = this) {
         const loops = DynamicComponentParser.getLoops(content);
         if (loops) {
             loops.forEach(loop => {
@@ -60,6 +61,15 @@ export default class DynamicComponent {
             if (!this.invokedErrors.var) {
                 console.warn(WolfuixWarn.exceptions.componentVarFailure(e));
                 this.invokedErrors.var = true;
+            }
+        }
+
+        if (options.enableEval) {
+            const ifBlocks = DynamicComponentParser.getIfStatements(content);
+            if (ifBlocks) {
+                ifBlocks.forEach(ifBlock => {
+                    content = parser.parseIfStatement(ifBlock, content);
+                });
             }
         }
 

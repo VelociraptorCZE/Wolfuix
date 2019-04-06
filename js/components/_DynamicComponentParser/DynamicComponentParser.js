@@ -3,10 +3,16 @@
  * Copyright (c) Simon Raichl 2019
  * MIT License
  */
+import ComponentParserService from "./ComponentParserService";
 
-export default class DynamicComponentParser {
+export default class DynamicComponentParser extends ComponentParserService {
     constructor() {
+        super();
         this.foreachEnd = "{(\\s+|)/foreach(\\s+|)}";
+        this.ifRegex = {
+            start: "{\\s*if.*?}",
+            end: "{\\s*\\/if\\s*}"
+        }
     }
 
     set newContext(context) {
@@ -64,16 +70,16 @@ export default class DynamicComponentParser {
             let iterationNum = loop.var[1],
                 tempContent = loop.content;
 
+            if (iterationNum) {
+                tempContent = tempContent.replace(new RegExp(iterationNum, "g"), iteration);
+            }
+
             loop.varsToParse.forEach(varToParse => {
                 const objProps = DynamicComponentParser.getObjectProperties(varToParse);
                 tempContent = tempContent.replace(
                     varToParse, `{{${loop.collection}.${iteration}${objProps}`
                 );
             });
-
-            if (iterationNum) {
-                tempContent = tempContent.replace(new RegExp(iterationNum, "g"), iteration);
-            }
 
             tempContent = this.parseVariables(vars, tempContent);
             newContent += tempContent;
@@ -82,24 +88,25 @@ export default class DynamicComponentParser {
         return content.replace(foreach, newContent);
     }
 
-    static _getForeachArgs(arg) {
-        return arg.replace("}", "").split(",").map(_var => `{{${_var}}}`);
+    parseIfStatement(ifBlock, content) {
+        const { ifRegex } = this;
+        const ifStatementRegex = RegExp(`(${ifRegex.end})|(${ifRegex.start})`, "g");
+
+        const parsedIfStatement = ifBlock.match(RegExp(ifRegex.start))
+            .toString()
+            .trim()
+            .replace(/({\s*if)|(}$)/g, "");
+
+        const condition = Function(`return ${parsedIfStatement}`).bind(this.context);
+
+        if (condition()) {
+            content = content.replace(RegExp(ifStatementRegex), "");
+        }
+        else {
+            content = content.replace(ifBlock, "");
+        }
+
+        return content;
     }
 
-    static _getVarName(variable) {
-        return variable.replace(/[{ }]/g, "");
-    }
-
-    static getVariables(content) {
-        return content.match(/{{.+?}}/g);
-    }
-
-    static getObjectProperties(varName) {
-        const vName = varName.split(".")[0];
-        return varName.replace(vName, "") || "}}";
-    }
-
-    static getLoops(content) {
-        return content.match(/{(\s+|)foreach.+?}.*?{(\s+|)\/foreach(\s+|)}/g);
-    }
 }
