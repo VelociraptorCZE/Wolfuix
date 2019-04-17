@@ -27,4 +27,14 @@ export default class ComponentParserService {
     static getBlock(blockName, content) {
         return content.match(new RegExp(`{(\\s+|)${blockName}.+?}.*?{(\\s+|)\\/${blockName}(\\s+|)}`, "g"));
     }
+
+    static unescapeString(string) {
+        const toUnescape = [
+            ["&gt;", ">"], ["&lt;", "<"],
+        ];
+
+        toUnescape.forEach(([entity, char]) => string = string.replace(new RegExp(entity, "g"), char));
+
+        return string;
+    }
 }

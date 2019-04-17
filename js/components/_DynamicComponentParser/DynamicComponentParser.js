@@ -90,17 +90,19 @@ export default class DynamicComponentParser extends ComponentParserService {
 
     parseIfStatement(ifBlock, content) {
         const { ifRegex } = this;
-        const ifStatementRegex = RegExp(`(${ifRegex.end})|(${ifRegex.start})`, "g");
 
-        const parsedIfStatement = ifBlock.match(RegExp(ifRegex.start))
+        const parsedIfStatement = ComponentParserService.unescapeString(
+            ifBlock.match(RegExp(ifRegex.start))
             .toString()
             .trim()
-            .replace(/({\s*if)|(}$)/g, "");
+            .replace(/({\s*if)|(}$)/g, "")
+        );
 
         const condition = Function(`return ${parsedIfStatement}`).bind(this.context);
 
         if (condition()) {
-            content = content.replace(RegExp(ifStatementRegex), "");
+            const ifBlockContent = ifBlock.replace(new RegExp(`(${ifRegex.start})|(${ifRegex.end})`, "g"), "");
+            content = content.replace(ifBlock, ifBlockContent);
         }
         else {
             content = content.replace(ifBlock, "");

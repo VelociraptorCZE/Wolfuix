@@ -42,6 +42,9 @@ export default class WolfuixElemTools {
         return rect;
     }
 
+    static elementIsVisible (element) {
+        return WolfuixElemFactory.getElem(element).offsetParent !== null;
+    }
 }
 
 if (!Node.prototype.insertAfter) {

@@ -74,5 +74,14 @@ export default class DynamicComponent {
         }
 
         target.innerHTML = content;
+
+        if (options.enableEval) {
+            const elsWithClickListener = [...target.querySelectorAll("[data-wolfuix-click]")];
+
+            elsWithClickListener.forEach(el => {
+                el.addEventListener("click", Function(el.getAttribute("data-wolfuix-click")).bind(parser.context));
+                el.removeAttribute("data-wolfuix-click")
+            });
+        }
     }
 }
