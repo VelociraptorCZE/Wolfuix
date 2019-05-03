@@ -91,8 +91,6 @@ export default class DynamicComponent {
         wolfuixAttrsToNativeAttrs.forEach(attr => {
             const elsWithAttr = [...target.querySelectorAll(`[${attr.wolfuix}]`)];
 
-            console.log(elsWithAttr)
-
             elsWithAttr.forEach(el => {
                 el.setAttribute(attr.native, el.getAttribute(attr.wolfuix));
                 el.removeAttribute(attr.wolfuix);
