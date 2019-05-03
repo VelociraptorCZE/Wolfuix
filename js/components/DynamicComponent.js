@@ -16,7 +16,7 @@ export default class DynamicComponent {
         this.parser = new DynamicComponentParser();
         this.wolfuixAttrsToNativeAttrs = [
             { native: "src", wolfuix: "data-wolfuix-src" },
-            { native: "href", wolfuix: "data-wolfuix-src" }
+            { native: "href", wolfuix: "data-wolfuix-href" }
         ];
         this.invokedErrors = {
             foreach: false,
@@ -90,6 +90,8 @@ export default class DynamicComponent {
 
         wolfuixAttrsToNativeAttrs.forEach(attr => {
             const elsWithAttr = [...target.querySelectorAll(`[${attr.wolfuix}]`)];
+
+            console.log(elsWithAttr)
 
             elsWithAttr.forEach(el => {
                 el.setAttribute(attr.native, el.getAttribute(attr.wolfuix));
