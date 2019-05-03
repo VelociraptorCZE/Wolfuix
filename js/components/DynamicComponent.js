@@ -14,6 +14,10 @@ export default class DynamicComponent {
         this.content = (typeof content === "string" ? content : this.target.innerHTML).replace(/\n/g, "");
         this.options = options;
         this.parser = new DynamicComponentParser();
+        this.wolfuixAttrsToNativeAttrs = [
+            { native: "src", wolfuix: "data-wolfuix-src" },
+            { native: "href", wolfuix: "data-wolfuix-src" }
+        ];
         this.invokedErrors = {
             foreach: false,
             var: false
@@ -36,7 +40,7 @@ export default class DynamicComponent {
         return this;
     }
 
-    render({ target, content, parser, options } = this) {
+    render({ target, content, parser, options, wolfuixAttrsToNativeAttrs } = this) {
         const loops = DynamicComponentParser.getLoops(content);
         if (loops) {
             loops.forEach(loop => {
@@ -83,5 +87,14 @@ export default class DynamicComponent {
                 el.removeAttribute("data-wolfuix-click")
             });
         }
+
+        wolfuixAttrsToNativeAttrs.forEach(attr => {
+            const elsWithAttr = [...target.querySelectorAll(`[${attr.wolfuix}]`)];
+
+            elsWithAttr.forEach(el => {
+                el.setAttribute(attr.native, el.getAttribute(attr.wolfuix));
+                el.removeAttribute(attr.wolfuix);
+            });
+        });
     }
 }
